@@ -1,4 +1,6 @@
 #include "FaceExtractor.h"
+#define MIN_DETECTION 12
+
 using namespace cv;
 using namespace cv::face;
 
@@ -30,12 +32,30 @@ FaceExtractor::~FaceExtractor()
 
 std::vector<Mat> FaceExtractor::extractFaces(Mat frame, Size faceSize) {
       std::vector<Mat> croppedFaces;
+      faces.clear();
+      detectionCount.clear();
+
       // Convert frame to grayscale because
       // faceDetector requires grayscale image.
       cvtColor(frame, gray, COLOR_BGR2GRAY);
+
       // Detect faces
-      faces.clear();
-      faceDetector.detectMultiScale(gray, faces);
+      faceDetector.detectMultiScale(gray, faces, detectionCount);
+
+      //Remove faces if they dont meet the detection count threshold
+      bool done = false;
+      while(!done) {
+        done = true;
+        for(unsigned short i = 0; i < faces.size(); i++) {
+            if(detectionCount[i] < MIN_DETECTION) {
+                done = false;
+                faces.erase(faces.begin() + i);
+                detectionCount.erase(detectionCount.begin() + i);
+                break;
+            }
+        }
+      }
+
       if(!faces.empty()) {
         landmarks.clear();
         if(facemark->fit(frame,faces,landmarks)) {
@@ -50,12 +70,7 @@ std::vector<Mat> FaceExtractor::extractFaces(Mat frame, Size faceSize) {
           std::vector<Point2f> rightEye = getEyePoints(landmarks[i], 1);
           Point2f leftEyeCenter = FaceExtractor::averagePoints(leftEye);
           Point2f rightEyeCenter = FaceExtractor::averagePoints(rightEye);
-          Point2f rotationCenter = averagePoints(leftEyeCenter, rightEyeCenter);
-
-          //OPTIONAL, FOR DEBUGGING, DRAW THE POINTS OVER THE FACE
-          //ellipse(frame, leftEyeCenter, Size(2,2), 0,0,360,Scalar(0,255,0),3,8);
-          //ellipse(frame, rightEyeCenter, Size(2,2), 0,0,360,Scalar(0,255,0),3,8);
-          //ellipse(frame, rotationCenter, Size(2,2), 0,0,360,Scalar(0,255,0),3,8);
+          //Point2f rotationCenter = averagePoints(leftEyeCenter, rightEyeCenter);
 
           //Create a triangle of points for the source end of our affine transformation
           srcTriangle[0] = leftEyeCenter;

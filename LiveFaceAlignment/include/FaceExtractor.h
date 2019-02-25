@@ -39,6 +39,7 @@ class FaceExtractor
         Point2f srcTriangle[3];
         std::vector<std::vector<Point2f>> landmarks;
         std::vector<Rect> faces;
+        std::vector<int> detectionCount;
 };
 
 #endif // FACEEXTRACTOR_H

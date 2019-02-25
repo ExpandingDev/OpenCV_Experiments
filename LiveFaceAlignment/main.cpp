@@ -60,10 +60,15 @@ int main(int argc,char** argv)
     FaceExtractor fe("/usr/share/opencv/haarcascades/haarcascade_frontalface_alt2.xml", "lbfmodel.yaml");
     Mat frame;
     while(cam.read(frame)) {
-        for(Mat face : fe.extractFaces(frame, Size(200,200))) {
-            imshow("c", face);
-        }
+        //for(Mat face : fe.extractFaces(frame, Size(200,200))) {
+        //   imshow("c", face);
+        //}
 
+        std::vector<Mat> extracted = fe.extractFaces(frame, Size(200,200));
+        for (unsigned short i = 0; i < extracted.size(); i++) {
+            std::string s = "FACE: " + std::to_string(i);
+            imshow(s, extracted[i]);
+        }
         if (waitKey(1) == 27) break;
     }
     return 0;
