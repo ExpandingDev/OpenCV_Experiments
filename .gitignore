@@ -42,6 +42,6 @@ EigenFaces/data/*/*
 FaceIdentification/TESTDIR/*
 
 # Models that are not ours and are too large to upload
-FaceIdentifiation/lbfmodel.yaml
+FaceIdentification/lbfmodel.yaml
 LiveFaceAlignment/lbfmodel.yaml
 AAM_Testing/lbfmodel.yaml
