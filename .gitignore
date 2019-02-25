@@ -33,6 +33,15 @@
 */Debug/
 */*/Debug/
 
+# Compilation output
+*/bin/*
+*/obj/*
 
 # Private Data
 EigenFaces/data/*/*
+FaceIdentification/TESTDIR/*
+
+# Models that are not ours and are too large to upload
+FaceIdentifiation/lbfmodel.yaml
+LiveFaceAlignment/lbfmodel.yaml
+AAM_Testing/lbfmodel.yaml
